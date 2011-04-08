@@ -5,6 +5,7 @@ class PhononVlc <Formula
 
   depends_on 'cmake' => :build
   depends_on 'phonon'
+  depends_on 'vlc'
 
   def install
     system "cmake . #{std_cmake_parameters}"
