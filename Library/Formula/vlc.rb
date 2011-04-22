@@ -15,13 +15,26 @@ class Vlc < Formula
     exp = "export #{cc}; export #{cxx}; export #{objc}"
     
     # Additional Libs
-    system "#{exp}; cd extras/contrib; ./bootstrap x86_64-apple-darwin10"
+    if MACOS_VERSION == 10.5
+      system "#{exp}; cd extras/contrib; ./bootstrap"
+    else
+      inreplace 'extras/contrib/bootstrap' do |s|
+        s.gsub! /SDK_TARGET=10.5/, 'SDK_TARGET=10.6'
+      end
+      inreplace 'extras/contrib/bootstrap' do |s|
+        s.gsub! /using the 10.5/, 'using the 10.6'
+      end
+      system "#{exp}; cd extras/contrib; ./bootstrap x86_64-apple-darwin10"
+    end
     system "#{exp}; cd extras/contrib; make"
 
     # VLC
     system "#{exp}; ./bootstrap"
-    system "#{exp}; ./configure --enable-debug  --build=x86_64-apple-darwin10 --prefix=#{prefix}"
-    # system "cmake . #{std_cmake_parameters}"
+    if MACOS_VERSION == 10.5
+      system "#{exp}; ./configure --enable-debug --prefix=#{prefix}"
+    else
+      system "#{exp}; ./configure --enable-debug  --build=x86_64-apple-darwin10 --with-macosx-sdk=/Developer/SDKs/MacOSX10.6.sdk --prefix=#{prefix}"
+    end
     system "#{exp}; make install"
   end
 end
