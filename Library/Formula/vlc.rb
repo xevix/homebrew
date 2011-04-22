@@ -19,8 +19,10 @@ class Vlc < Formula
       system "#{exp}; cd extras/contrib; ./bootstrap"
     else
       # Yes, I realize this is ugly, but hardcoding SDKs is ugly too
-      inreplace 'extras/contrib/bootstrap' do |s|
-        s.gsub! /10.5/, '10.6'
+      ['configure','configure.ac','extras/contrib/bootstrap'].each do |file|
+        inreplace file do |s|
+          s.gsub! /10.5/, '10.6'
+        end
       end
       system "#{exp}; cd extras/contrib; ./bootstrap x86_64-apple-darwin10"
     end
