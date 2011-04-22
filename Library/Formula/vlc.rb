@@ -18,11 +18,9 @@ class Vlc < Formula
     if MACOS_VERSION == 10.5
       system "#{exp}; cd extras/contrib; ./bootstrap"
     else
+      # Yes, I realize this is ugly, but hardcoding SDKs is ugly too
       inreplace 'extras/contrib/bootstrap' do |s|
-        s.gsub! /SDK_TARGET=10.5/, 'SDK_TARGET=10.6'
-      end
-      inreplace 'extras/contrib/bootstrap' do |s|
-        s.gsub! /using the 10.5/, 'using the 10.6'
+        s.gsub! /10.5/, '10.6'
       end
       system "#{exp}; cd extras/contrib; ./bootstrap x86_64-apple-darwin10"
     end
